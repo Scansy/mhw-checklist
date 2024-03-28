@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Actor&family=Kadwa:wght@400;700&display=swap');
+
+h1, h2, h4 {
+    font-family: Kadwa;
+}
+
+body {
+    font-family: Actor;
+}
+
+.bg-green {
+    background-color: #226837;
+}
+
+.bg-brown {
+    background-color: #343030;
+}
+
+.bg-dark-green {
+    background-color: #173620;
+}
+
+.nav-link {
+    color: white;
+    transition: scale 0.5s;
+}
+
+.nav-link:hover {
+    scale: 1.2;
+    color: white;
+}
+
+.nav-item {
+    border-right: 2px solid white;
+}
+
+.nav-item:last-child {
+    border-right: none;
+}
+
+.nav-item {
+    width: 33%;
+}
+
+section:not(section:first-of-type) {
+    margin-top: 6em;
+}
+
+
+
+.text-pink {
+    color: #E1306C;
+}
+
+.text-green {
+    color: #1DB954;
+}
+
+footer a {
+    transition: scale 0.5s;
+}
+
+footer a:hover {
+    scale: 1.2;
+}
