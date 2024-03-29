@@ -10,7 +10,7 @@ const path = require('path'); // built-in module to manipulate paths
 
 // setting up view
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs'); 
+app.set('view engine', 'ejs'); // embedded javascript
 
 // default endpoint
 app.get('/', (req, res) => {

@@ -46,7 +46,11 @@ section:not(section:first-of-type) {
     margin-top: 6em;
 }
 
-
+footer {
+    position: fixed; /* or position: absolute; */
+    bottom: 0;
+    width: 100%;
+}
 
 .text-pink {
     color: #E1306C;
@@ -62,4 +66,17 @@ footer a {
 
 footer a:hover {
     scale: 1.2;
+}
+
+.logo {
+    height: 5em;
+}
+
+#about-creators img {
+    height: 10em;
+}
+
+.btn a {
+    text-decoration: none;
+    color: black;
 }
