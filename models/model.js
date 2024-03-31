@@ -133,11 +133,30 @@ async function saveList(username_, list_) {
     }
 }
 
+
+async function getList(username_) {
+    try {
+        // Queries saved list with given username
+        let result = await lists.find({username: username_}).toArray();
+
+        // returns the list associated with the user
+        if (result.length > 0) {
+            return result[0].list;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error("Error saving list:", error);
+        throw error; // Rethrow the error to handle it at a higher level if needed
+    }
+}
+
 // Exporting functions and connecting to the database
 module.exports = {
     connectToDatabase,
     insertCredential,
     logRequest,
     findUser,
-    saveList
+    saveList,
+    getList
 };
