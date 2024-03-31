@@ -8,12 +8,23 @@ const app = express();
 const model = require('../models/model.js'); // the model
 const path = require('path'); // built-in module to manipulate paths
 
-app.use(express.static(`${__dirname}/../client`));
+app.use(express.static(`${__dirname}/../views`));
 
 // default endpoint
 app.get('/', (req, res) => {
-    model.connectToDatabase()
-    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+    model.connectToDatabase();
+    let index = path.join(__dirname, "..", "views", "index.html");
+    model.logRequest("GET", "/", index, 200);
+    res.sendFile(index);
+});
+
+// signup
+app.get('/signup/username=:username/password=:password', (req, res) => {
+    let username = req.username;
+    let password = req.password;
+    model.insertCredential(username, password);
+    model.logRequest("GET", `/signup/username=${username}/password=${password}`, {username, password}, 200);
+    res.redirect("/");
 });
 
 app.listen(PORT, () => {

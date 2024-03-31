@@ -11,6 +11,7 @@ const dbName = "mhw-checklist";
 const userInfoCollectionName = "user-info";
 const logCollectionName = "log";
 const listsCollectionName = "lists";
+const date = new Date();
 
 // Collections
 let userInfo;
@@ -46,12 +47,13 @@ async function connectToDatabase() {
  * @param {*} password 
  * @returns boolean
  */
-async function insertCredential(username_, password_) {
+async function insertCredential(username_, password_, role_) {
     try {
         // Create a new user object
         let newUser = {
             username: username_,
-            password: password_
+            password: password_,
+            role: role_
         };
 
         // Insert the new user into the collection
@@ -73,11 +75,11 @@ async function insertCredential(username_, password_) {
  * @param {*} status_ 
  * @returns boolean
  */
-async function logRequest(time_, method_, path_, query_, status_) {
+async function logRequest(method_, path_, query_, status_) {
     try {
         // Create a request object
         let request = {
-            Timestamp: time_,
+            Timestamp: date.getTime(),
             Method: method_,
             Path: path_,
             Query: query_,
@@ -104,7 +106,13 @@ async function findUser(username_, password_) {
     try {
         // Find a user with the provided username and password
         let result = await userInfo.find({username: username_, password: password_}).toArray();
-        return result.length > 0; // Return true if a matching user is found, otherwise false
+
+        // returns the user information
+        if (result.length > 0) {
+            return result[0].list;
+        } else {
+            return false;
+        }
     } catch (error) {
         console.error("Error finding user:", error);
         throw error; // Rethrow the error to handle it at a higher level if needed
