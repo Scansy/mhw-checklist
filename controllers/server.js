@@ -13,7 +13,7 @@ app.use(express.static(`${__dirname}/../client`));
 // default endpoint
 app.get('/', (req, res) => {
     model.connectToDatabase();
-    res.sendFile(path.join(__dirname, '..', 'views', 'index.html'));
+    res.send("../views.index.html");
 });
 
 app.listen(PORT, () => {
