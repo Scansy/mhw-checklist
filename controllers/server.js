@@ -5,16 +5,17 @@
 const PORT = process.env.PORT || 1010;
 const express = require('express');
 const app = express();
-const model = require('./models/model.js'); // the model
+const model = require('../models/model.js'); // the model
 const path = require('path'); // built-in module to manipulate paths
 
-// setting up view
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs'); // embedded javascript
+app.use(express.static(`${__dirname}/../views`));
 
 // default endpoint
 app.get('/', (req, res) => {
-    
+    model.connectToDatabase();
+    let index = path.join(__dirname, "..", "views", "index.html");
+    model.logRequest("GET", "/", index, 200);
+    res.sendFile(index);
 });
 
 app.listen(PORT, () => {
