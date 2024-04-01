@@ -18,15 +18,6 @@ app.get('/', (req, res) => {
     res.sendFile(index);
 });
 
-// signup
-app.get('/signup/username=:username/password=:password', (req, res) => {
-    let username = req.username;
-    let password = req.password;
-    model.insertCredential(username, password);
-    model.logRequest("GET", `/signup/username=${username}/password=${password}`, {username, password}, 200);
-    res.redirect("/");
-});
-
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
