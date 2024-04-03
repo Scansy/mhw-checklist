@@ -137,7 +137,8 @@ async function findUser(username_, password_) {
 
         // returns the user information
         if (result.length > 0) {
-            return result[0].list;
+            let response = result[0];
+            return response;
         } else {
             return false;
         }

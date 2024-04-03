@@ -34,9 +34,21 @@ app.get('/', (req, res) => {
 app.post('/signup', (req, res) => {
     const data = req.body;
     console.log("signup hit")
-    // model.insertCredential(data.username, data.password);
+    model.insertCredential(data.username, data.password, "guest");
+    model.logRequest("POST", "/signup", req.body, 300);
     res.sendStatus(300);
 });
+
+// signin endpoint
+app.post('/signin', async (req, res) => {
+    const data = req.body;
+    console.log("signin hit");
+    let result = await model.findUser(data.username, data.password)
+    console.log(result);
+    currentRole = result.role;
+    // model.logRequest("POST", "/signin", result, 300);
+    res.redirect("/");
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
