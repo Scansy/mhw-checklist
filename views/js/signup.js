@@ -23,16 +23,13 @@
             body: JSON.stringify(data)
         };
 
-        // HELP!!!
+        // call signup endpoint
         fetch('/signup', request)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            if (response.redirected) {
-                window.location.href = response.url;
+            if (response.status === 300 || response.redirected) {
+                window.location.href = "/signin.html";
             } else {
-                // If it's not a redirect, handle the response as needed
+                // if it's not a redirect, handle the response as needed
                 console.log('Signup successful!');
             }
         })

@@ -9,14 +9,22 @@ const model = require('../models/model.js'); // the model
 const path = require('path'); // built-in module to manipulate paths
 const bodyParser = require('body-parser');
 let isSignedIn = false;
-let currentRole;
+let currentRole = "guest";
 
 app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/../views`));
 
+// connect to mongodb database
+model.connectToDatabase()
+    .then(() => {
+        console.log("Mongodb connected");
+    })
+    .catch(error => {
+        console.error("Error connecting to MongoDB:", error);
+    });
+
 // default endpoint
 app.get('/', (req, res) => {
-    model.connectToDatabase();
     let index = path.join(__dirname, "..", "views", "index.html");
     model.logRequest("GET", "/", index, 200);
     res.sendFile(index);
@@ -25,9 +33,9 @@ app.get('/', (req, res) => {
 // signup endpoint
 app.post('/signup', (req, res) => {
     const data = req.body;
-    console.log(data);
-    // model.insertCredential(data.)
-    res.redirect(path.join(__dirname, "..", "views", "index.html"));
+    console.log("signup hit")
+    // model.insertCredential(data.username, data.password);
+    res.sendStatus(300);
 });
 
 app.listen(PORT, () => {
