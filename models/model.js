@@ -1,3 +1,31 @@
+/**
+ * userInfo format:
+ * {
+ *  username: username_,
+    password: password_,
+    role: role_
+ * }
+ */
+
+/**
+ * HTTP log request:
+ * {
+    Timestamp: date.getTime(),
+    Method: method_,
+    Path: path_,
+    Query: query_,
+    Status Code": status_
+   }
+ */
+
+/**
+ * List request:
+ * {
+    username: username_,
+    list: list_ -> an objest in itself
+   }
+ */
+
 const { MongoClient } = require('mongodb');
 
 // MongoDB connection URI
