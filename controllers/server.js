@@ -8,6 +8,7 @@ const app = express();
 const model = require('../models/model.js'); // the model
 const path = require('path'); // built-in module to manipulate paths
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 let isSignedIn = false;
 let currentRole = "guest";
 
@@ -31,10 +32,12 @@ app.get('/', (req, res) => {
 });
 
 // signup endpoint
-app.post('/signup', (req, res) => {
+app.post('/signup', async (req, res) => {
     const data = req.body;
     console.log("signup hit")
-    model.insertCredential(data.username, data.password, "guest");
+
+    model.insertCredential(data.username, data.password, "user");
+
     model.logRequest("POST", "/signup", req.body, 300);
     res.sendStatus(300);
 });
@@ -43,11 +46,16 @@ app.post('/signup', (req, res) => {
 app.post('/signin', async (req, res) => {
     const data = req.body;
     console.log("signin hit");
-    let result = await model.findUser(data.username, data.password)
-    console.log(result);
-    currentRole = result.role;
-    // model.logRequest("POST", "/signin", result, 300);
-    res.redirect("/");
+
+    let result = await model.findUser(data.username, data.password);
+    if (result) {
+        currentRole = result.role;
+        model.logRequest("POST", "/signin", result, 300);
+        res.redirect("/");
+    } else {
+        console.log("wrong password hit")
+        res.sendStatus(100);
+    }
 })
 
 app.listen(PORT, () => {

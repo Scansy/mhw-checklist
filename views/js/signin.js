@@ -3,6 +3,9 @@
     let passwordField = document.getElementById("passwordField");
     let signInButton = document.getElementById("signin");
 
+    /**
+     * sign in button function
+     */
     signInButton.addEventListener("click", async (event) => {
         event.preventDefault();
 
@@ -26,8 +29,11 @@
         // call signup endpoint
         fetch('/signin', request)
         .then(response => {
-            if (response.status === 300 || response.redirected) {
-                window.location.href = "/signin.html";
+            if (response.status === 100) {
+                console.log("code 100")
+                displayError();
+            } else if (response.status === 300) {
+                window.location.href = "/index.html";
             } else {
                 // if it's not a redirect, handle the response as needed
                 console.log('Signup successful!');
@@ -36,4 +42,18 @@
         .catch(error => console.error('Error:', error));
 
     })
+
+    /**
+     * displays errors regarding authentication
+     */
+    const displayError = () => {
+        let form = document.querySelector("form");
+
+        // create alert
+        let alert = document.createElement("div");
+        alert.classList.add("alert", "alert-light");
+        alert.innerHTML = "Oops! You entered the wrong username/password.";
+
+        form.appendChild(alert);
+    };
 })();

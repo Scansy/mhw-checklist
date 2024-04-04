@@ -27,6 +27,7 @@
  */
 
 const { MongoClient } = require('mongodb');
+const bcrypt = require('bcrypt');
 
 // MongoDB connection URI
 const uri = "mongodb+srv://matthewphilip123:U4CiOdjfvyLLghIK@cluster0.ylzxijs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -39,6 +40,7 @@ const dbName = "mhw-checklist";
 const userInfoCollectionName = "user-info";
 const logCollectionName = "log";
 const listsCollectionName = "lists";
+const saltRound = 10;
 const date = new Date();
 
 // Collections
@@ -77,10 +79,12 @@ async function connectToDatabase() {
  */
 async function insertCredential(username_, password_, role_) {
     try {
+        let hashedPassword = await bcrypt.hash(password_, saltRound);
+
         // Create a new user object
         let newUser = {
             username: username_,
-            password: password_,
+            password: hashedPassword,
             role: role_
         };
 
@@ -133,15 +137,17 @@ async function logRequest(method_, path_, query_, status_) {
 async function findUser(username_, password_) {
     try {
         // Find a user with the provided username and password
-        let result = await userInfo.find({username: username_, password: password_}).toArray();
+        let searchResult = await userInfo.find({username: username_}).toArray();
+        console.log(searchResult);
+        if (searchResult.length === 0) {
+            return false;
+        }  
+
+        // compare with bcrypt
+        let result = await bcrypt.compare(password_, searchResult[0].password);
 
         // returns the user information
-        if (result.length > 0) {
-            let response = result[0];
-            return response;
-        } else {
-            return false;
-        }
+        return result? 1:0;
     } catch (error) {
         console.error("Error finding user:", error);
         throw error; // Rethrow the error to handle it at a higher level if needed
