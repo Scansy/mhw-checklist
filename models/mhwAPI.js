@@ -62,7 +62,7 @@ async function getAllWeapons() {
  * @returns 
  */
 async function getSpecificWeapon(category) {
-      if (!fs.existsSync(`${category}.json`)) {
+     if (!fs.existsSync(`${category}.json`)) {
         let encoded = encodeURIComponent(category);
         let response = await fetch(`${url}?q={"type":"${encoded}"}`);
         let data = await response.json();
@@ -71,4 +71,4 @@ async function getSpecificWeapon(category) {
       }
 
       return readCache(`${category}.json`);
-}
+} 

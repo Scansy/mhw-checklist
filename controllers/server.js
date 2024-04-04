@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 let isSignedIn = false;
 let currentRole = "guest";
+let currentUsername;
 
 app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/../views`));
@@ -51,6 +52,7 @@ app.post('/signin', async (req, res) => {
     if (result) {
         currentRole = result.role;
         isSignedIn = true;
+        currentUsername = result.username;
         model.logRequest("POST", "/signin", result, 300);
         res.redirect("/");
     } else {
