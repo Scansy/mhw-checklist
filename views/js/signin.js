@@ -29,8 +29,8 @@
         // call signup endpoint
         fetch('/signin', request)
         .then(response => {
-            if (response.status === 100) {
-                console.log("code 100")
+            if (response.status === 200) {
+                console.log("code 200")
                 displayError();
             } else if (response.status === 300) {
                 window.location.href = "/index.html";
@@ -48,12 +48,13 @@
      */
     const displayError = () => {
         let form = document.querySelector("form");
+        let div = document.querySelector("#signinDiv");
 
         // create alert
         let alert = document.createElement("div");
         alert.classList.add("alert", "alert-light");
         alert.innerHTML = "Oops! You entered the wrong username/password.";
 
-        form.appendChild(alert);
+        form.insertBefore(alert, div);
     };
 })();
