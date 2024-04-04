@@ -60,7 +60,24 @@ app.post('/signin', async (req, res) => {
         res.sendStatus(200);
     }
 })
+app.get('/weapon_breif', async (req, res) => {
+    let url = new URL(`https://mhw-db.com/weapons`);
+    url.searchParams.set('p',JSON.stringify(
+        {
+        "id":true,   
+        "name": true,
+        "type": true,
+        "assets": true,
+        }
+    ));
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        res.json(data);
+    })
 
+});
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
