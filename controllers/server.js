@@ -61,6 +61,7 @@ app.post('/signin', async (req, res) => {
     }
 })
 app.get('/weapon_breif', async (req, res) => {
+    console.log("weapon_breif hit");
     let url = new URL(`https://mhw-db.com/weapons`);
     url.searchParams.set('p',JSON.stringify(
         {
