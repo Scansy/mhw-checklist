@@ -28,9 +28,9 @@
 
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
-
+const password = "password"; // password for MongoDB  
 // MongoDB connection URI
-const uri = "mongodb+srv://matthewphilip123:U4CiOdjfvyLLghIK@cluster0.ylzxijs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = `mongodb+srv://matthewphilip123:U4CiOdjfvyLLghIK@cluster0.ylzxijs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Creating a new MongoClient instance
 const client = new MongoClient(uri);

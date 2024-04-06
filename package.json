@@ -5,7 +5,8 @@
   "main": "./controllers/server.js",
   "scripts": {
     "test": "test",
-    "start": "nodemon ./controllers/server.js"
+    "start": "nodemon ./controllers/server.js",
+    "ri": "rm -rf node_modules && npm install"
   },
   "author": "",
   "license": "ISC",
