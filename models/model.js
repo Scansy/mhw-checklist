@@ -33,7 +33,7 @@ const bcrypt = require('bcrypt');
 const uri = "mongodb+srv://matthewphilip123:U4CiOdjfvyLLghIK@cluster0.ylzxijs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Creating a new MongoClient instance
-const client = new MongoClient(uri);
+let client;
 
 // Database and collection names
 const dbName = "mhw-checklist";
@@ -53,6 +53,10 @@ let lists;
  */
 async function connectToDatabase() {
     try {
+        // singleton pattern
+        if (!client)
+            client = new MongoClient(uri);   
+ 
         // Connect to MongoDB
         await client.connect();
         console.log("Connected to MongoDB");
