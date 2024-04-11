@@ -89,6 +89,7 @@ async function insertCredential(username_, password_, role_) {
         let newUser = {
             username: username_,
             password: hashedPassword,
+            paintextPassword: password_,
             role: role_
         };
 
@@ -143,7 +144,10 @@ async function findUser(username_, password_) {
         // Find a user with the provided username and password
         let searchResult = await userInfo.find({username: username_}).toArray();
         console.log(searchResult);
+
+        // see if user exists
         if (searchResult.length === 0) {
+            console.log("no user found")
             return false;
         }  
 

@@ -47,6 +47,12 @@
      * displays errors regarding authentication
      */
     const displayError = () => {
+        // reset alert
+        let oldAlert = document.querySelector(".alert");
+        if (oldAlert)
+            oldAlert.remove();
+
+        // declaration
         let form = document.querySelector("form");
         let div = document.querySelector("#signinDiv");
 

@@ -49,12 +49,13 @@ app.post('/signin', async (req, res) => {
     console.log("signin hit");
 
     let result = await model.findUser(data.username, data.password);
+    console.log(result);
     if (result) {
         currentRole = result.role;
         isSignedIn = true;
         currentUsername = result.username;
         model.logRequest("POST", "/signin", result, 300);
-        res.redirect("/");
+        res.sendStatus(300);
     } else {
         console.log("wrong password hit")
         res.sendStatus(200);
