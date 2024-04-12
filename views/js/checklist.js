@@ -9,6 +9,8 @@
     'charge-blade', 'insect-glaive', 'light-bowgun',
     'heavy-bowgun', 'bow'
   ];  
+
+  
   let category = document.querySelector('#category-select');
   let isFirst = true;
   let cart = [];
@@ -51,8 +53,22 @@
     </div>
     `;
     let btn = div.querySelector('.addToList');
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async() => {
+      let logged = await fetch('/isSignedIn');
+      logged = await logged.json();
+      if(!logged){
+        document.getElementById('noticeDialog').style.display = "block";
+        return;
+      }
       cart.push(item.name);
+      const request = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cart)
+      };
+      fetch('/saveList', request);
       console.log(cart);
     });
 

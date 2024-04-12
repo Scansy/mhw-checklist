@@ -101,6 +101,15 @@ app.get('/weapon_brief/:weaponType', async (req, res) => {
 
 });
 
+// save list to database
+app.post('/saveList', async (req, res) => {
+    console.log("saveList hit");
+    let list = req.body;
+    model.saveList(currentUsername, list);
+    model.logRequest("POST", "/saveList", req.body, 200);
+    res.sendStatus(200);
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

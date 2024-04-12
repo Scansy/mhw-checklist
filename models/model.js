@@ -153,14 +153,14 @@ async function findUser(username_, password_) {
         // see if user exists
         if (searchResult.length === 0) {
             console.log("no user found")
-            return false;
+            return 0;
         }  
 
         // compare with bcrypt
         let result = await bcrypt.compare(password_, searchResult[0].password);
 
         // returns the user information
-        return result? 1:0;
+        return result? searchResult[0]:0;
     } catch (error) {
         console.error("Error finding user:", error);
         throw error; // Rethrow the error to handle it at a higher level if needed
@@ -174,6 +174,13 @@ async function findUser(username_, password_) {
  */
 async function saveList(username_, list_) {
     try {
+        if(await getList(username_) !== false){
+            //  UPDATE OPERATION
+            // Update the list document in the lists collection
+            let result = await lists.updateOne({username: username_}, {$set: {list: list_}});
+            console.log(`A list was updated with the _id: ${result.insertedId}`);
+            return;
+        }
         // Create a new document to save the list
         let savedList = {
             username: username_,
@@ -206,7 +213,7 @@ async function getList(username_) {
         throw error; // Rethrow the error to handle it at a higher level if needed
     }
 }
-
+  
 // Exporting functions and connecting to the database
 module.exports = {
     connectToDatabase,
