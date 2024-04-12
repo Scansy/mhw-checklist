@@ -177,8 +177,8 @@ async function saveList(username_, list_) {
         if(await getList(username_) !== false){
             //  UPDATE OPERATION
             // Update the list document in the lists collection
-            let result = await lists.updateOne({username: username_}, {$set: {list: list_}});
-            console.log(`A list was updated with the _id: ${result.insertedId}`);
+            await lists.updateOne({username: username_}, {$set: {list: list_}});
+            console.log(`A list was updated for usename : ${username_}`);
             return;
         }
         // Create a new document to save the list

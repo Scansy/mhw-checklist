@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 1010;
 const express = require('express');
 const app = express();
 const model = require('../models/model.js'); // the model
+const mhw = require('../models/mhwAPI.js'); // the mhwAPI
 const path = require('path'); // built-in module to manipulate paths
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
@@ -79,25 +80,29 @@ app.get('/isSignedIn', async (req, res) => {
 
 // fetch weapons
 app.get('/weapon_brief/:weaponType', async (req, res) => {
+    
     console.log("weapon_breif hit");
-    let weaponType = req.params.weaponType;
-    let url = new URL(`https://mhw-db.com/weapons?q={"type":"${weaponType}"}`);
+    let data = await mhw.getSpecificWeapon(req.params.weaponType);
+    model.logRequest("GET", "/weapon_brief", data, 200);
+    res.json(data);
+    // let weaponType = req.params.weaponType;
+    // let url = new URL(`https://mhw-db.com/weapons?q={"type":"${weaponType}"}`);
    
-    url.searchParams.set('p',JSON.stringify(
-        {
-        "id":true,   
-        "name": true,
-        "type": true,
-        "assets": true,
-        }
-    ));
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        model.logRequest("GET", "/weapon_brief", data, 200);
-        res.json(data);
-    })
+    // url.searchParams.set('p',JSON.stringify(
+    //     {
+    //     "id":true,   
+    //     "name": true,
+    //     "type": true,
+    //     "assets": true,
+    //     }
+    // ));
+    // fetch(url)
+    // .then(response => response.json())
+    // .then(data => {
+    //     console.log(data);
+    //     model.logRequest("GET", "/weapon_brief", data, 200);
+    //     res.json(data);
+    // })
 
 });
 
@@ -108,6 +113,22 @@ app.post('/saveList', async (req, res) => {
     model.saveList(currentUsername, list);
     model.logRequest("POST", "/saveList", req.body, 200);
     res.sendStatus(200);
+});
+// get list from database
+app.get('/getList', async (req, res) => {
+    console.log("getList hit");
+    let list = await model.getList(currentUsername);
+    model.logRequest("GET", "/getList", list, 200);
+    res.json(list);
+});
+
+// get weapon by name
+app.get('/weapon_stat/:weaponName', async (req, res) => {
+    console.log("weapon_stat hit");
+    let weaponName = req.params.weaponName;
+    let data = await mhw.getWeaponByName(weaponName);
+    model.logRequest("GET", "/weapon_stat", data, 200);
+    res.json(data);
 });
 
 app.listen(PORT, () => {

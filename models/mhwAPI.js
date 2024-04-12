@@ -72,3 +72,24 @@ async function getSpecificWeapon(category) {
 
       return readCache(`${category}.json`);
 } 
+
+async function getWeaponByName(weaponName) {
+    let response = await fetch(`${url}?q={"name":"${weaponName}"}&p={"crafting":"true","assets":"true"}`);
+    let data = await response.json();
+    return data;
+}
+
+async function getWeaponByid(id) {
+    let response = await fetch(`${url}/${id}`);
+    let data = await response.json();
+    return data;
+}
+
+// exports
+module.exports = {
+    cacheData,
+    readCache,
+    getAllWeapons,
+    getSpecificWeapon,
+    getWeaponByName,
+};

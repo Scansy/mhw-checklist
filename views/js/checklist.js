@@ -60,6 +60,9 @@
         document.getElementById('noticeDialog').style.display = "block";
         return;
       }
+      if(cart.includes(item.name)){
+        return;
+      }
       cart.push(item.name);
       const request = {
         method: 'POST',
