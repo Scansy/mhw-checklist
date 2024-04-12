@@ -31,6 +31,7 @@ const bcrypt = require('bcrypt');
 const password = "password"; // password for MongoDB  
 // MongoDB connection URI
 const uri = `mongodb+srv://matthewphilip123:U4CiOdjfvyLLghIK@cluster0.ylzxijs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const localUri = "mongodb://localhost:27017";
 
 // Creating a new MongoClient instance
 let client;
@@ -51,12 +52,16 @@ let lists;
 /**
  * Connect to MongoDB and initialize collections
  */
-async function connectToDatabase() {
+async function connectToDatabase(local = false) {
     try {
-        // singleton pattern
-        if (!client)
-            client = new MongoClient(uri);   
- 
+        // singleton design pattern
+        if (!client) {
+            if (local) 
+                client = new MongoClient(localUri);
+            else
+                client = new MongoClient(uri);  
+        }           
+
         // Connect to MongoDB
         await client.connect();
         console.log("Connected to MongoDB");

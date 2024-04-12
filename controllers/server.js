@@ -61,9 +61,28 @@ app.post('/signin', async (req, res) => {
         res.sendStatus(200);
     }
 })
-app.get('/weapon_breif', async (req, res) => {
+
+// logout endpoint
+app.get('/logout', async (req, res) => {
+    isSignedIn = false;
+    currentRole = "guest";
+    currentUsername = "";
+    model.logRequest("GET", "/logout", null, 200);
+    res.redirect('/');
+});
+
+// isSignedIn endpoint
+app.get('/isSignedIn', async (req, res) => { 
+    model.logRequest("GET", "/isSignedIn", isSignedIn, 200);
+    res.send(isSignedIn);
+});
+
+// fetch weapons
+app.get('/weapon_brief/:weaponType', async (req, res) => {
     console.log("weapon_breif hit");
-    let url = new URL(`https://mhw-db.com/weapons`);
+    let weaponType = req.params.weaponType;
+    let url = new URL(`https://mhw-db.com/weapons?q={"type":"${weaponType}"}`);
+   
     url.searchParams.set('p',JSON.stringify(
         {
         "id":true,   
@@ -76,10 +95,12 @@ app.get('/weapon_breif', async (req, res) => {
     .then(response => response.json())
     .then(data => {
         console.log(data);
+        model.logRequest("GET", "/weapon_brief", data, 200);
         res.json(data);
     })
 
 });
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
