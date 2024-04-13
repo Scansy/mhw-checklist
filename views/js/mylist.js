@@ -22,6 +22,11 @@
     };    
 
     const displayList = async () => {
+        if (!list) {
+            materials.innerHTML = '<h2>No items in the list</h2>';
+            return;
+        } 
+        document.getElementById('deleteSection').style.display = "block";
         list.forEach(async (weaponData) => {
           
             let weapon = await fetch(`/weapon_stat/${weaponData.type}/${weaponData.name}`);
@@ -77,7 +82,7 @@
             console.log(div)
         });
         setTimeout(() => {
-            displayMaterials();}, 2000);
+            displayMaterials();}, 1000);
     };
 
     // adds material to the list
@@ -165,5 +170,22 @@
                 }
             });
         }
+
+        document.getElementById('delete-btn-user').addEventListener('click', async (event) => {
+            event.preventDefault();
+            let response = await fetch('/deleteUserList/self');
+            let data = await response.json();
+
+            if (data) {
+                console.log(`User list deleted.`);
+                showNotification(`User list deleted.`, true);
+                list = [];
+                display.innerHTML = '';
+                materials.innerHTML = '';
+            } else {
+                console.log(`User list not found.`);
+                showNotification(`User list not found.`, false);
+            }
+        });
     });
 })()

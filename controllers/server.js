@@ -36,8 +36,6 @@ app.get('/', (req, res) => {
 // signup endpoint
 app.post('/signup', async (req, res) => {
     const data = req.body;
-    console.log("signup hit")
-
     model.insertCredential(data.username, data.password, "user");
 
     model.logRequest("POST", "/signup", req.body, 300);
@@ -47,10 +45,8 @@ app.post('/signup', async (req, res) => {
 // signin endpoint
 app.post('/signin', async (req, res) => {
     const data = req.body;
-    console.log("signin hit");
 
     let result = await model.findUser(data.username, data.password);
-    console.log(result);
     if (result) {
         currentRole = result.role;
         isSignedIn = true;
@@ -80,35 +76,13 @@ app.get('/isSignedIn', async (req, res) => {
 
 // fetch weapons
 app.get('/weapon_brief/:weaponType', async (req, res) => {
-    
-    console.log("weapon_breif hit");
     let data = await mhw.getSpecificWeapon(req.params.weaponType);
     model.logRequest("GET", "/weapon_brief", data, 200);
     res.json(data);
-    // let weaponType = req.params.weaponType;
-    // let url = new URL(`https://mhw-db.com/weapons?q={"type":"${weaponType}"}`);
-   
-    // url.searchParams.set('p',JSON.stringify(
-    //     {
-    //     "id":true,   
-    //     "name": true,
-    //     "type": true,
-    //     "assets": true,
-    //     }
-    // ));
-    // fetch(url)
-    // .then(response => response.json())
-    // .then(data => {
-    //     console.log(data);
-    //     model.logRequest("GET", "/weapon_brief", data, 200);
-    //     res.json(data);
-    // })
-
 });
 
 // save list to database
 app.post('/saveList', async (req, res) => {
-    console.log("saveList hit");
     let list = req.body;
     model.saveList(currentUsername, list);
     model.logRequest("POST", "/saveList", req.body, 200);
@@ -116,7 +90,6 @@ app.post('/saveList', async (req, res) => {
 });
 // get list from database
 app.get('/getList', async (req, res) => {
-    console.log("getList hit");
     let list = await model.getList(currentUsername);
     model.logRequest("GET", "/getList", list, 200);
     res.json(list);
@@ -124,7 +97,6 @@ app.get('/getList', async (req, res) => {
 
 // get weapon by name
 app.get('/weapon_stat/:weaponType/:weaponName', async (req, res) => {
-    console.log("weapon_stat hit");
     let weaponName = req.params.weaponName;
     let weaponType = req.params.weaponType;
     let data = await mhw.getWeaponByName(weaponType,weaponName);
@@ -134,21 +106,23 @@ app.get('/weapon_stat/:weaponType/:weaponName', async (req, res) => {
 
 // get role
 app.get('/getRole', async (req, res) => {
-    console.log("getRole hit");
     model.logRequest("GET", "/getRole", currentRole, 200);
     res.send(currentRole);
 });
 
 // delete a user's list
 app.get('/deleteUserList/:username', async (req, res) => {
-    console.log("deleteList hit");
-    let currentUsername = req.params.username;
-    let response = await model.deleteList(currentUsername);
+    let currentUsername_ = req.params.username;
+    if (currentUsername_ === "self") {
+        currentUsername_ = currentUsername;
+    }
+    let response = await model.deleteList(currentUsername_);
     model.logRequest("GET", "/deleteList", null, 200);
     res.send(response);
 });
+
+// get weapon by id
 app.get('/weapon_id/:weaponType/:id', async (req, res) => {
-    console.log("weapon_id hit");
     let id = req.params.id;
     let weaponType = req.params.weaponType;
     let data = await mhw.getWeaponByid(weaponType,id);
