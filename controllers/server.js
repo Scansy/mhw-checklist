@@ -123,14 +123,22 @@ app.get('/getList', async (req, res) => {
 });
 
 // get weapon by name
-app.get('/weapon_stat/:weaponName', async (req, res) => {
+app.get('/weapon_stat/:weaponType/:weaponName', async (req, res) => {
     console.log("weapon_stat hit");
     let weaponName = req.params.weaponName;
-    let data = await mhw.getWeaponByName(weaponName);
+    let weaponType = req.params.weaponType;
+    let data = await mhw.getWeaponByName(weaponType,weaponName);
     model.logRequest("GET", "/weapon_stat", data, 200);
     res.json(data);
 });
-
+app.get('/weapon_id/:weaponType/:id', async (req, res) => {
+    console.log("weapon_id hit");
+    let id = req.params.id;
+    let weaponType = req.params.weaponType;
+    let data = await mhw.getWeaponByid(weaponType,id);
+    model.logRequest("GET", "/weapon_id", data, 200);
+    res.json(data);
+});
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

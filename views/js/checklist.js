@@ -20,15 +20,15 @@
     .then(response => response.json())
     .then(data => {
       data.forEach((item,i) => {
-        if(i < 10){
+        if(i%10 == 0){
           console.log(item);
           let carouselItem = createCarouselItem(item);
           carousel.appendChild(carouselItem);
         }
-        else{
-          let listItem = displayList(item);
-          itemList.appendChild(listItem);
-        }
+       
+        let listItem = displayList(item);
+        itemList.appendChild(listItem);
+      
       });
      
     });
@@ -60,10 +60,17 @@
         document.getElementById('noticeDialog').style.display = "block";
         return;
       }
-      if(cart.includes(item.name)){
-        return;
-      }
-      cart.push(item.name);
+
+    if(isValueExists(cart, item.name)){
+      return;
+    }
+      cart.push(
+        {
+          name: item.name,
+          type: category.value,
+        }
+      );
+
       const request = {
         method: 'POST',
         headers: {
@@ -77,6 +84,15 @@
 
     return div;
   }
+
+  const isValueExists = (array, value) => {
+    for (const pair of array) {
+        if (pair.value === value) {
+            return true;
+        }
+    }
+    return false;
+};
   const createCarouselItem = (item) => {
     let div = document.createElement('div');
     if (isFirst) {
@@ -116,14 +132,12 @@
       carousel.innerHTML = '';
       itemList.innerHTML = '';
       data.forEach((item,i) => {
-        if(i < 10){
+        if(i%10 == 0){
           let carouselItem = createCarouselItem(item);
           carousel.appendChild(carouselItem);
         }
-        else{
-          let listItem = displayList(item);
-          itemList.appendChild(listItem);
-        }
+        let listItem = displayList(item);
+        itemList.appendChild(listItem);
       });
     });
   };
