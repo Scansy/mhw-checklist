@@ -131,6 +131,22 @@ app.get('/weapon_stat/:weaponType/:weaponName', async (req, res) => {
     model.logRequest("GET", "/weapon_stat", data, 200);
     res.json(data);
 });
+
+// get role
+app.get('/getRole', async (req, res) => {
+    console.log("getRole hit");
+    model.logRequest("GET", "/getRole", currentRole, 200);
+    res.send(currentRole);
+});
+
+// delete a user's list
+app.get('/deleteUserList/:username', async (req, res) => {
+    console.log("deleteList hit");
+    let currentUsername = req.params.username;
+    let response = await model.deleteList(currentUsername);
+    model.logRequest("GET", "/deleteList", null, 200);
+    res.send(response);
+});
 app.get('/weapon_id/:weaponType/:id', async (req, res) => {
     console.log("weapon_id hit");
     let id = req.params.id;
