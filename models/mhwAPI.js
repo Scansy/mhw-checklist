@@ -2,13 +2,6 @@
 const url = "https://mhw-db.com/weapons";
 const fs = require('fs');
 let hasCached = false;
-const weaponTypes = [
-    'great-sword', 'long-sword', 'sword-and-shield',
-    'dual-blades', 'hammer', 'hunting-horn',
-    'lance', 'gunlance', 'switch-axe',
-    'charge-blade', 'insect-glaive', 'light-bowgun',
-    'heavy-bowgun', 'bow'
-];
 
 /**
  * caches the weapons data

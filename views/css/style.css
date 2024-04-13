@@ -75,6 +75,21 @@ footer a:hover {
     color: black;
 }
 
+.notification {
+    position: fixed;
+    bottom: 100px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    z-index: 9999; 
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+
+#noticeButton a {
+    color: white;
+}
+
 #noticeDialog {
     position: fixed;
     top: 0;

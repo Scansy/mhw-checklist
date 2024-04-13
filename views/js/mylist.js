@@ -3,7 +3,8 @@
     const modalView = document.getElementById('noticeDialog');
     const display = document.getElementById('display');
     let list = [];
-
+    let currentRole;
+    
     const getList = async () => {
         try {
             const response = await fetch('/getList');
@@ -41,7 +42,7 @@
             });
 
             div.innerHTML=`
-                <div class="card">
+                <div class="card mt-3">
                 <img src="${weapon.assets.image}" class="card-img-top" alt="Card 1">
                 <div class="card-body">
                     <h5 class="card-title">${name}</h5>
@@ -58,9 +59,36 @@
             display.appendChild(div);
         });
     };
+
+    const showNotification = (message, isSuccess) => {
+        // removes old notification
+        let oldNotice = document.querySelector(".notification");
+        if(oldNotice)
+            oldNotice.remove();
+    
+        let notice = document.createElement("div");
+        notice.textContent = message;
+        notice.classList.add("notification");
+    
+        if (isSuccess) {
+            let icon = document.createElement("i");
+            icon.classList.add("bi", "bi-check", "h5");
+            notice.appendChild(icon);
+            notice.style.backgroundColor = "#198754";
+        } else
+            notice.style.backgroundColor = "#ffc107";
+        document.body.appendChild(notice);
+    
+        setTimeout(() => {
+            notice.remove();
+        }, 2000);
+    }
+
     window.addEventListener('load', async () => {
-        
-        
+        currentRole = await fetch('/getRole');
+        currentRole = await currentRole.text();
+        console.log(currentRole);
+
         try {
             const response = await fetch('/isSignedIn');
             const data = await response.json();
@@ -74,5 +102,28 @@
         }
         await getList();
         await displayList();
+
+        // ADMIN ONLY INTERFACE
+        let adminInterface = document.getElementById('admin-only');
+        
+        if (currentRole === 'admin') {
+            console.log("admin hit")
+            let deleteBtn = document.getElementById('delete-btn');
+            adminInterface.style.display = 'block';
+            deleteBtn.addEventListener('click', async (event) => {
+                event.preventDefault();
+                let username = document.getElementById('delete-username').value;
+                let response = await fetch(`/deleteUserList/${username}`);
+                let data = await response.json();
+
+                if (data) {
+                    console.log(`User ${username} list deleted.`);
+                    showNotification(`User ${username} list deleted.`, true);
+                } else {
+                    console.log(`User ${username} not found.`);
+                    showNotification(`User ${username} not found.`, false);
+                }
+            });
+        }
     });
 })()

@@ -131,6 +131,22 @@ app.get('/weapon_stat/:weaponName', async (req, res) => {
     res.json(data);
 });
 
+// get role
+app.get('/getRole', async (req, res) => {
+    console.log("getRole hit");
+    model.logRequest("GET", "/getRole", currentRole, 200);
+    res.send(currentRole);
+});
+
+// delete a user's list
+app.get('/deleteUserList/:username', async (req, res) => {
+    console.log("deleteList hit");
+    let currentUsername = req.params.username;
+    let response = await model.deleteList(currentUsername);
+    model.logRequest("GET", "/deleteList", null, 200);
+    res.send(response);
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

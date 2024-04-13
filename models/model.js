@@ -196,7 +196,11 @@ async function saveList(username_, list_) {
     }
 }
 
-
+/**
+ * Retrieves the list of the user
+ * @param {*} username_ 
+ * @returns 
+ */
 async function getList(username_) {
     try {
         // Queries saved list with given username
@@ -213,6 +217,24 @@ async function getList(username_) {
         throw error; // Rethrow the error to handle it at a higher level if needed
     }
 }
+
+
+async function deleteList(username_) {
+    try {
+        // Delete the list document from the lists collection
+        let response = await lists.deleteOne({username: username_});
+        console.log(response.deletedCount);
+        if (response.deletedCount === 0) {
+            console.log("No list found for the user");
+            return false;
+        }
+        console.log(`A list was deleted for usename : ${username_}`);
+        return true;
+    } catch (error) {
+        console.error("Error deleting list:", error);
+        throw error; // Rethrow the error to handle it at a higher level if needed
+    }
+}
   
 // Exporting functions and connecting to the database
 module.exports = {
@@ -221,5 +243,6 @@ module.exports = {
     logRequest,
     findUser,
     saveList,
-    getList
+    getList,
+    deleteList
 };

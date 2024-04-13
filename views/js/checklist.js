@@ -38,20 +38,40 @@
   const displayList = (item) => {
     let div = document.createElement('div');
     div.classList.add('my-2');
-    div.innerHTML = `
-    <div class="card">
-      <div class="card-body d-flex flex-column flex-md-row">
-        <div class="flex-grow-1">
-          <h5>${item.name}</h5>
-          <p>${item.type}</p>
+    
+    // check if item assets exist
+    if (item.assets) {
+      div.innerHTML = `
+      <div class="card">
+        <div class="card-body d-flex flex-column flex-md-row">
+          <div class="flex-grow-1">
+            <h5>${item.name}</h5>
+            <p>${item.type}</p>
+          </div>
+          <img src="${item.assets.image}" class="img-fluid justify-self-end" width="80" alt="${item.name}">
+
+          <button class="btn btn-primary my-3 addToList">Add to List</button>
+
         </div>
-        <img src="${item.assets.image}" class="img-fluid justify-self-end" width="80" alt="${item.name}">
-
-        <button class="btn btn-primary my-3 addToList">Add to List</button>
-
       </div>
-    </div>
-    `;
+      `;
+    } else {
+      div.innerHTML = `
+      <div class="card">
+        <div class="card-body d-flex flex-column flex-md-row">
+          <div class="flex-grow-1">
+            <h5>${item.name}</h5>
+            <p>${item.type}</p>
+          </div>
+          <img src="" class="img-fluid justify-self-end" width="80" alt="${item.name}">
+
+          <button class="btn btn-primary my-3 addToList">Add to List</button>
+
+        </div>
+      </div>
+      `;
+    }
+    
     let btn = div.querySelector('.addToList');
     btn.addEventListener('click', async() => {
       let logged = await fetch('/isSignedIn');
@@ -73,6 +93,7 @@
       };
       fetch('/saveList', request);
       console.log(cart);
+      showNotification(`${item.name} added to list`, true);
     });
 
     return div;
@@ -127,6 +148,30 @@
       });
     });
   };
+
+  const showNotification = (message, isSuccess) => {
+    // removes old notification
+    let oldNotice = document.querySelector(".notification");
+    if(oldNotice)
+        oldNotice.remove();
+
+    let notice = document.createElement("div");
+    notice.textContent = message;
+    notice.classList.add("notification");
+
+    if (isSuccess) {
+        let icon = document.createElement("i");
+        icon.classList.add("bi", "bi-check", "h5");
+        notice.appendChild(icon);
+        notice.style.backgroundColor = "#198754";
+    } else
+        notice.style.backgroundColor = "#ffc107";
+    document.body.appendChild(notice);
+
+    setTimeout(() => {
+        notice.remove();
+    }, 2000);
+}
 
   window.addEventListener('load', async () => {
     fillCategory();
