@@ -75,23 +75,19 @@ async function getWeaponByName(weaponType,weaponName) {
     return weapon;
 }
 
-async function getWeaponByid(weaponType, id) {
-    let jsonData = fs.readFileSync(`${weaponType}.json`);
-    let data = await JSON.parse(jsonData);
-    //console.log("data", data);
-    let weapon = search(data,"id",id);
-    console.log("weapon", weapon);
-    return weapon;
+async function getWeaponByid(weaponType,weaponId) {
+    let response = await fetch(`${url}/${weaponId}`);
+    let data = await response.json();
+    console.log(data);
+    return data;
 }
 
 
-const  search = (obj, key, value) => {
-    let target = null;
+const search = (obj, key, value) => {
     for(const element of obj ){
         if (element[key] === value) {
             //console.log("element", element);
-            target = element;
-            return target;
+            return element;
         }
     }
     return null; // Value not found
