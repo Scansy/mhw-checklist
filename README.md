@@ -13,3 +13,7 @@ Features:
 - Node js
 - Bootstrap
 - MongoDB
+
+# Installation
+- run ```npm install``` to install dependencies
+- run ```npm start```  to host locally
