@@ -94,7 +94,6 @@ async function insertCredential(username_, password_, role_) {
         let newUser = {
             username: username_,
             password: hashedPassword,
-            paintextPassword: password_,
             role: role_
         };
 

@@ -26,7 +26,7 @@
           
             let weapon = await fetch(`/weapon_stat/${weaponData.type}/${weaponData.name}`);
             weapon = await weapon.json();
-            let craftingMaterials = weapon.crafting.materials;
+            let craftingMaterials = weapon.crafting.craftingMaterials;
             let upgradeMaterials = weapon.crafting.upgradeMaterials;
             let craftable = weapon.crafting.craftable;
             let prevWeapon;
@@ -74,7 +74,7 @@
             
 
             display.appendChild(div);
-            
+            console.log(div)
         });
         setTimeout(() => {
             displayMaterials();}, 2000);
