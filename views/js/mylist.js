@@ -2,14 +2,16 @@
     // declarations
     const modalView = document.getElementById('noticeDialog');
     const display = document.getElementById('display');
+    const materials = document.getElementById('materials');
+    console.log(materials);
     let list = [];
+    let materialsList = [];
     let currentRole;
     
     const getList = async () => {
         try {
             const response = await fetch('/getList');
             const data = await response.json();
-            console.log(data);
             if (data !== null ) {
                
                 list = data;    
@@ -20,10 +22,8 @@
     };    
 
     const displayList = async () => {
-        console.log(typeof(list));
         list.forEach(async (weaponData) => {
-            console.log("name", weaponData);
-            console.log("name.type", weaponData.type);
+          
             let weapon = await fetch(`/weapon_stat/${weaponData.type}/${weaponData.name}`);
             weapon = await weapon.json();
             let craftingMaterials = weapon.crafting.materials;
@@ -31,30 +31,27 @@
             let craftable = weapon.crafting.craftable;
             let prevWeapon;
 
-            
-            console.log("type of weapon", typeof(weapon));
-            console.log("weapon", weapon);
+          
             let div = document.createElement('div');
             div.classList.add('col-md-4');
             
 
             let ul = document.createElement('ul');
-            console.log("craftable: ", craftable);
             if(craftable){
                 craftingMaterials.forEach((material) => {
                     let li = document.createElement('li');
                     li.textContent = `${material.item.name}: ${material.quantity}`;
+                    addMaterial(material.item.name, material.quantity);
                     ul.appendChild(li);
                 });
             }
             else{
                 prevWeapon = await fetch(`/weapon_id/${weaponData.type}/${weapon.crafting.previous}`);
-                console.log("prevWeapon", prevWeapon);
                 prevWeapon = await prevWeapon.json();
-                console.log("prevWeaponJSON", prevWeapon);
                 upgradeMaterials.forEach((material) => {
                     let li = document.createElement('li');
                     li.textContent = `${material.item.name}: ${material.quantity}`;
+                    addMaterial(material.item.name, material.quantity);
                     ul.appendChild(li);
                 });
             }
@@ -67,6 +64,7 @@
                     <h5 class="card-title">${weaponData.name}</h5>
                     <p class="card-text">
                         ${craftable? 'Craftable': `Upgradeable from ${prevWeapon.name}`}
+                        <br>
                         Materials:
                         ${ul.outerHTML}
                     </p>
@@ -76,9 +74,25 @@
             
 
             display.appendChild(div);
+            
         });
+        setTimeout(() => {
+            displayMaterials();}, 2000);
     };
 
+    // adds material to the list
+    const addMaterial = (material, amount) => {
+        let found = false;
+        materialsList.forEach((item) => {
+            if (item.name === material) {
+                item.amount += amount;
+                found = true;
+            }
+        });
+        if (!found) {
+            materialsList.push({name: material, amount: amount});
+        }
+    };
     const showNotification = (message, isSuccess) => {
         // removes old notification
         let oldNotice = document.querySelector(".notification");
@@ -104,13 +118,18 @@
     }
 
 
-    const displayMaterials = (materials) => {
-
+    const displayMaterials = () => {
+        materials.innerHTML = '';
+        for (let i = 0; i < materialsList.length; i++) {
+            let li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.textContent = `${materialsList[i].name}: ${materialsList[i].amount}`;
+            materials.appendChild(li);
+        }
     };
     window.addEventListener('load', async () => {
         currentRole = await fetch('/getRole');
         currentRole = await currentRole.text();
-        console.log(currentRole);
 
         try {
             const response = await fetch('/isSignedIn');
@@ -125,12 +144,10 @@
         }
         await getList();
         await displayList();
-
         // ADMIN ONLY INTERFACE
         let adminInterface = document.getElementById('admin-only');
         
         if (currentRole === 'admin') {
-            console.log("admin hit")
             let deleteBtn = document.getElementById('delete-btn');
             adminInterface.style.display = 'block';
             deleteBtn.addEventListener('click', async (event) => {
