@@ -28,7 +28,8 @@
 
 const { MongoClient } = require("mongodb");
 const bcrypt = require("bcrypt");
-const password = process.env.MONGODB_KEY; // password for MongoDB
+// password for MongoDB create .env file if not exist
+const password = process.env.MONGODB_KEY; 
 // MongoDB connection URI
 const uri = `mongodb+srv://matthewphilip123:${password}@cluster0.ylzxijs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const localUri = "mongodb://localhost:27017";
